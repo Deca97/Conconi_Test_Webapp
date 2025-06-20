@@ -90,3 +90,24 @@ def load_test_with_data(username):
     results = cursor.fetchall()
     conn.close()
     return results
+
+def delete_test(username, timestamp):
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("""
+        DELETE FROM results
+        WHERE username = ? AND timestamp = ?
+    """, (username, timestamp))
+    conn.commit()
+    conn.close()
+
+def update_test_date(username, old_timestamp, new_timestamp):
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE results
+        SET timestamp = ?
+        WHERE username = ? AND timestamp = ?
+    """, (new_timestamp, username, old_timestamp))
+    conn.commit()
+    conn.close()
