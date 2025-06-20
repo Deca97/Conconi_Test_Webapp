@@ -82,10 +82,6 @@ else:
         selected_test = tests[options.index(selection)]
         _, timestamp, hr, sp, pace, hr_json, sp_json = selected_test
 
-        if st.button("🗑️ Elimina questo test"):
-            delete_test(st.session_state.username, timestamp)
-            st.success("Test eliminato con successo.")
-            st.rerun()
 
         # Campo per modificare la data del test selezionato
         st.markdown("### ✏️ Modifica data test selezionato")
