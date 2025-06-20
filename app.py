@@ -83,16 +83,6 @@ else:
         _, timestamp, hr, sp, pace, hr_json, sp_json = selected_test
 
 
-        # Campo per modificare la data del test selezionato
-        st.markdown("### ✏️ Modifica data test selezionato")
-        new_date = st.date_input("Nuova data", pd.to_datetime(timestamp).date())
-
-        if st.button("💾 Salva nuova data"):
-            new_timestamp = new_date.strftime("%Y-%m-%d") + timestamp[10:]  # conserva ora originale
-            update_test_date(st.session_state.username, timestamp, new_timestamp)
-            st.success("Data modificata con successo.")
-            st.rerun()
-
         hr_list = json.loads(hr_json)
         sp_list = json.loads(sp_json)
 
