@@ -1,7 +1,7 @@
 import streamlit as st
 from auth import (
     create_users_table, register_user, login_user,
-    save_result, get_user_results, load_test_with_data
+    save_result, get_user_results, load_test_with_data, delete_test, update_test_date
 )
 from utils import analyze_fit_file  
 import pandas as pd
@@ -81,6 +81,21 @@ else:
 
         selected_test = tests[options.index(selection)]
         _, timestamp, hr, sp, pace, hr_json, sp_json = selected_test
+
+        if st.button("🗑️ Elimina questo test"):
+            delete_test(st.session_state.username, timestamp)
+            st.success("Test eliminato con successo.")
+            st.rerun()
+
+        # Campo per modificare la data del test selezionato
+        st.markdown("### ✏️ Modifica data test selezionato")
+        new_date = st.date_input("Nuova data", pd.to_datetime(timestamp).date())
+
+        if st.button("💾 Salva nuova data"):
+            new_timestamp = new_date.strftime("%Y-%m-%d") + timestamp[10:]  # conserva ora originale
+            update_test_date(st.session_state.username, timestamp, new_timestamp)
+            st.success("Data modificata con successo.")
+            st.rerun()
 
         hr_list = json.loads(hr_json)
         sp_list = json.loads(sp_json)
