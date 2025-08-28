@@ -4,3 +4,10 @@ plotly
 fitdecode
 numpy
 pandas
+bcrypt
+datetime
+json
+sqlite3
+os
+tempfile
+
