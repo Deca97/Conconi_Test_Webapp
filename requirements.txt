@@ -1,6 +1,7 @@
 streamlit
-streamlit-authenticator
 plotly
+pandas
+bcrypt
+supabase
 fitdecode
 numpy
-pandas
