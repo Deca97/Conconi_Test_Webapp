@@ -1,15 +1,11 @@
-# app.py
 import streamlit as st
 from datetime import datetime, date
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objs as go
 import json
-import sqlite3
-import os
-
+from utils import analyze_fit_file
 from auth import (
-    create_users_table,
     register_user,
     login_user,
     save_result,
@@ -17,19 +13,16 @@ from auth import (
     delete_test,
     update_test_date,
 )
-from utils import analyze_fit_file
 
-# ---- Config app ----
+# ---- Config Streamlit ----
 st.set_page_config(page_title="Conconi Test App", layout="wide")
-create_users_table()
-
 st.title("🏃‍♂️ Conconi Test Analyzer")
 
 # ---- Auth ----
-auth_mode = st.sidebar.radio("Accedi / Registrati", ("Login", "Registrati"))
-
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
+
+auth_mode = st.sidebar.radio("Accedi / Registrati", ("Login", "Registrati"))
 
 if not st.session_state.logged_in:
     username = st.sidebar.text_input("Username")
@@ -57,24 +50,17 @@ else:
         st.session_state.logged_in = False
         st.rerun()
 
-    # ---- Upload file FIT ----
+    # ---- Upload & Analisi FIT ----
     st.header("📁 Carica e Analizza un Nuovo Test Conconi")
-    if "uploaded_file" not in st.session_state:
-        st.session_state.uploaded_file = None
-
-    uploaded_file = st.file_uploader(
-        "Carica file FIT", type=["fit"], key="fit_uploader"
-    )
-
+    uploaded_file = st.file_uploader("Carica file FIT", type=["fit"])
     test_date = st.date_input("📅 Data del test", date.today())
 
-    if uploaded_file and uploaded_file != st.session_state.uploaded_file:
-        # Analizza solo se è un nuovo file
-        st.session_state.uploaded_file = uploaded_file
+    if uploaded_file and "file_uploaded" not in st.session_state:
+        st.session_state.file_uploaded = True  # evita caricamenti multipli
         result = analyze_fit_file(uploaded_file)
-
         if "error" in result:
             st.error(result["error"])
+            st.session_state.file_uploaded = False
         else:
             hr = result["heart_rate"]
             speed = result["speed_threshold"]
@@ -93,91 +79,81 @@ else:
             )
             st.info("✅ Test salvato con successo!")
 
-    # ---- Storico test ----
+    # ---- Storico Test ----
     st.markdown("---")
     st.header("📊 Storico Test Conconi")
 
     tests = load_test_with_data(st.session_state.username)
-
     if tests:
-        # Creazione DataFrame
+        # Ordina per timestamp
+        tests = sorted(tests, key=lambda x: x["timestamp"])
         df = pd.DataFrame(
-            [
-                (t[2], t[3], t[4], t[5])
-                for t in tests
-            ],
-            columns=["Data", "HR", "Speed", "Pace"]
+            [(t["timestamp"], t["heart_rate"], t["speed"], t["pace"]) for t in tests],
+            columns=["Data", "HR", "Speed", "Pace"],
         )
         df["Data"] = pd.to_datetime(df["Data"], errors="coerce")
-        df = df.sort_values("Data")
         st.dataframe(df, use_container_width=True)
 
         # Grafici trend
-        st.plotly_chart(
-            px.line(df, x="Data", y="HR", title="Andamento Soglia FC (bpm)", markers=True),
-            use_container_width=True
-        )
-        st.plotly_chart(
-            px.line(df, x="Data", y="Speed", title="Andamento Velocità Soglia (m/s)", markers=True),
-            use_container_width=True
-        )
+        fig = px.line(df, x="Data", y="HR", title="Andamento Soglia FC (bpm)", markers=True)
+        st.plotly_chart(fig, use_container_width=True)
+        fig2 = px.line(df, x="Data", y="Speed", title="Andamento Velocità Soglia (m/s)", markers=True)
+        st.plotly_chart(fig2, use_container_width=True)
 
-        # Selezione test per dettagli
+        # Selezione test
         st.subheader("🔍 Visualizza un test")
-        options = [
-            f"{t[2]} – {t[3]} bpm / {t[4]:.2f} m/s"
-            for t in tests
-        ]
-        selection_index = st.selectbox("Seleziona un test", range(len(options)), format_func=lambda x: options[x])
+        options = [f"{t['timestamp']} – {t['heart_rate']} bpm / {t['speed']:.2f} m/s" for t in tests]
+        selection = st.selectbox("Seleziona un test", options)
+        selected_test = tests[options.index(selection)]
 
-        selected_test = tests[selection_index]
-        _, _, timestamp, hr, sp, pace, hr_json, sp_json = selected_test
+        timestamp = selected_test["timestamp"]
+        hr_val = selected_test["heart_rate"]
+        sp_val = selected_test["speed"]
+        pace_val = selected_test["pace"]
+        hr_json = selected_test.get("hr_array", "[]")
+        sp_json = selected_test.get("sp_array", "[]")
 
-        # Colonne per pulsanti
-        col1, col2 = st.columns([1, 2])
+        col1, col2 = st.columns([1, 1])
         with col1:
-            if st.button("🗑️ Elimina test"):
+            if st.button("🗑️ Elimina test", use_container_width=True):
                 delete_test(st.session_state.username, timestamp)
-                st.success("Test eliminato")
-                st.session_state.uploaded_file = None
+                st.success("Test eliminato.")
                 st.rerun()
-
         with col2:
-            new_date = st.date_input("✏️ Modifica data test", pd.to_datetime(timestamp).date(), key="edit_date")
-            if st.button("💾 Salva nuova data"):
+            new_date = st.date_input("✏️ Modifica data", pd.to_datetime(timestamp).date(), key="edit_date")
+            if st.button("💾 Salva nuova data", use_container_width=True):
                 suffix = timestamp[10:] if len(timestamp) > 10 else " 00:00:00"
                 new_timestamp = new_date.strftime("%Y-%m-%d") + suffix
                 update_test_date(st.session_state.username, timestamp, new_timestamp)
-                st.success("Data modificata")
+                st.success("Data modificata.")
                 st.rerun()
 
-        # Grafico HR vs Speed
-        hr_list = json.loads(hr_json) if hr_json else []
-        sp_list = json.loads(sp_json) if sp_json else []
-
+        # Grafico dettagliato HR vs Speed
+        hr_list = json.loads(hr_json)
+        sp_list = json.loads(sp_json)
         if hr_list and sp_list and len(hr_list) == len(sp_list):
             figd = go.Figure()
             figd.add_trace(
                 go.Scatter(
-                    x=sp_list, y=hr_list, mode="lines+markers", name="HR vs Speed"
+                    x=sp_list,
+                    y=hr_list,
+                    mode="lines+markers",
+                    name="HR vs Speed",
+                    line=dict(width=2),
                 )
             )
-            figd.add_shape(
-                type="line", x0=sp, x1=sp, y0=min(hr_list), y1=max(hr_list),
-                line=dict(color="green", width=2, dash="dash")
-            )
-            figd.add_shape(
-                type="line", x0=min(sp_list), x1=max(sp_list), y0=hr, y1=hr,
-                line=dict(color="red", width=2, dash="dash")
-            )
+            figd.add_shape(type="line", x0=sp_val, x1=sp_val, y0=min(hr_list), y1=max(hr_list),
+                           line=dict(color="green", width=2, dash="dash"))
+            figd.add_shape(type="line", x0=min(sp_list), x1=max(sp_list), y0=hr_val, y1=hr_val,
+                           line=dict(color="red", width=2, dash="dash"))
             figd.update_layout(
-                title=f"Dettagli Test – {timestamp} | Soglia: {hr} bpm @ {sp:.2f} m/s ({pace})",
+                title=f"Dettagli Test – {timestamp} | Soglia: {hr_val} bpm @ {sp_val:.2f} m/s ({pace_val})",
                 xaxis_title="Velocità (m/s)",
                 yaxis_title="Frequenza cardiaca (bpm)",
-                height=520
+                height=520,
             )
             st.plotly_chart(figd, use_container_width=True)
         else:
-            st.warning("Nessun dato dettagliato disponibile per questo test.")
+            st.warning("Nessun dato dettagliato disponibile.")
     else:
         st.info("Nessun test disponibile. Carica un file FIT per iniziare.")

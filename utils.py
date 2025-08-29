@@ -40,39 +40,43 @@ def calculate_anaerobic_threshold(hr, sp):
     return None, None
 
 def speed_to_pace(speed):
-    if speed <= 0:
+    if speed == 0:
         return "N/A"
     sec_per_km = 1000 / speed
     minutes = int(sec_per_km // 60)
     seconds = int(sec_per_km % 60)
-    return f"{minutes}:{seconds:02d} min/km"
+    return f"{minutes}:{seconds:02d}"
 
 def analyze_fit_file(file_buffer):
+    import io
     with tempfile.NamedTemporaryFile(delete=False) as tmp:
         tmp.write(file_buffer.read())
         tmp_path = tmp.name
 
-    hr_list, sp_list, error = get_conconi_data(tmp_path)
+    heart_rates, speeds, error = get_conconi_data(tmp_path)
     os.remove(tmp_path)
 
     if error:
         return {"error": error}
-    if len(hr_list) < 30:
+
+    if len(heart_rates) < 30:
         return {"error": "File troppo corto o con dati insufficienti."}
 
-    hr_list = hr_list[10:-10]
-    sp_list = sp_list[10:-10]
+    heart_rates = heart_rates[10:-10]
+    speeds = speeds[10:-10]
 
-    hr_threshold, speed_threshold = calculate_anaerobic_threshold(hr_list, sp_list)
+    hr_threshold, speed_threshold = calculate_anaerobic_threshold(heart_rates, speeds)
 
     if hr_threshold is not None and speed_threshold is not None:
         pace = speed_to_pace(speed_threshold)
         return {
-            "heartRate": hr_list,
-            "speed": sp_list,
+            "heartRate": heart_rates,
+            "speed": speeds,
             "heart_rate": hr_threshold,
             "speed_threshold": speed_threshold,
             "pace": pace
         }
     else:
         return {"error": "Impossibile calcolare la soglia anaerobica."}
+    
+

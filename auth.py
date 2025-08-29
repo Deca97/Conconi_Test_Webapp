@@ -1,104 +1,46 @@
-# auth.py
-import sqlite3
+from supabase import create_client
 import bcrypt
 import json
 from datetime import datetime
 
-DB_PATH = "users.db"
+SUPABASE_URL = "https://gzvjntyijmvtrvntfxqv.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6dmpudHlpam12dHJ2bnRmeHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0MjM0MDUsImV4cCI6MjA3MTk5OTQwNX0.kDXNnBoDdJAh4Zlikp5oxi8JTv_kOTtaKbQs09_W6fw"
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-def get_conn():
-    return sqlite3.connect(DB_PATH, check_same_thread=False)
-
-# ---- Creazione tabelle ----
-def create_users_table():
-    conn = get_conn()
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            username TEXT PRIMARY KEY,
-            password TEXT
-        )
-    ''')
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS results (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL,
-            timestamp TEXT NOT NULL,
-            heart_rate REAL NOT NULL,
-            speed REAL NOT NULL,
-            pace TEXT NOT NULL,
-            hr_array TEXT,
-            sp_array TEXT
-        )
-    ''')
-    conn.commit()
-    conn.close()
-
-# ---- Registrazione / Login ----
 def register_user(username, password):
-    conn = get_conn()
-    try:
-        hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-        conn.execute(
-            "INSERT INTO users (username, password) VALUES (?, ?)",
-            (username, hashed)
-        )
-        conn.commit()
-        return True
-    except sqlite3.IntegrityError:
+    hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    existing = supabase.table("users").select("*").eq("username", username).execute()
+    if existing.data:
         return False
-    finally:
-        conn.close()
+    supabase.table("users").insert({"username": username, "password": hashed}).execute()
+    return True
 
 def login_user(username, password):
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute("SELECT password FROM users WHERE username=?", (username,))
-    data = cur.fetchone()
-    conn.close()
-    if data and bcrypt.checkpw(password.encode(), data[0]):
-        return True
+    resp = supabase.table("users").select("*").eq("username", username).execute()
+    if resp.data:
+        hashed = resp.data[0]["password"].encode()
+        return bcrypt.checkpw(password.encode(), hashed)
     return False
 
-# ---- Salvataggio test ----
 def save_result(username, hr, speed, pace, hr_list=None, sp_list=None, custom_date=None):
-    conn = get_conn()
-    cursor = conn.cursor()
-    timestamp = custom_date.strftime("%Y-%m-%d %H:%M:%S") if custom_date else datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    cursor.execute("""
-        INSERT INTO results (username, timestamp, heart_rate, speed, pace, hr_array, sp_array)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, (username, timestamp, hr, speed, pace,
-          json.dumps(hr_list or []), json.dumps(sp_list or [])))
-    conn.commit()
-    conn.close()
+    timestamp = (custom_date.strftime("%Y-%m-%d %H:%M:%S")
+                 if custom_date else datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    supabase.table("results").insert({
+        "username": username,
+        "timestamp": timestamp,
+        "heart_rate": hr,
+        "speed": speed,
+        "pace": pace,
+        "hr_array": json.dumps(hr_list or []),
+        "sp_array": json.dumps(sp_list or [])
+    }).execute()
 
-# ---- Caricamento storico test ----
 def load_test_with_data(username):
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT * FROM results WHERE username=? ORDER BY timestamp
-    """, (username,))
-    data = cur.fetchall()
-    conn.close()
-    return data
+    resp = supabase.table("results").select("*").eq("username", username).execute()
+    return resp.data or []
 
-# ---- Eliminazione test ----
 def delete_test(username, timestamp):
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute("""
-        DELETE FROM results WHERE username=? AND timestamp=?
-    """, (username, timestamp))
-    conn.commit()
-    conn.close()
+    supabase.table("results").delete().eq("username", username).eq("timestamp", timestamp).execute()
 
-# ---- Aggiornamento data test ----
-def update_test_date(username, old_timestamp, new_timestamp):
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute("""
-        UPDATE results SET timestamp=? WHERE username=? AND timestamp=?
-    """, (new_timestamp, username, old_timestamp))
-    conn.commit()
-    conn.close()
+def update_test_date(username, old_ts, new_ts):
+    supabase.table("results").update({"timestamp": new_ts}).eq("username", username).eq("timestamp", old_ts).execute()
