@@ -5,3 +5,4 @@ bcrypt
 supabase
 fitdecode
 numpy
+pwlf
