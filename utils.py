@@ -27,7 +27,7 @@ def get_conconi_data(file_path):
 # ===============================
 #   SMOOTHING CON SAVITZKY-GOLAY
 # ===============================
-def smooth_data(data, window=11, polyorder=2):
+def smooth_data(data, window=11, polyorder=3):
     if len(data) < window:
         return np.array(data)
     if window % 2 == 0:
