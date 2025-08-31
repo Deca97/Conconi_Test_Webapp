@@ -17,11 +17,10 @@ from auth import (
     delete_test,
     update_test_date,
 )
+# Inserisci il tuo ID di Google Analytics
+GA_ID = "G-04XMHP9LTK"
 
-import streamlit.components.v1 as components
-
-# Codice Google Analytics
-GA_ID = "G-04XMHP9LTK"  # <-- Sostituisci con il tuo ID
+# Codice di Google Analytics
 GA_SCRIPT = f"""
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
@@ -33,8 +32,8 @@ GA_SCRIPT = f"""
 </script>
 """
 
-# Inietto il codice nel frontend
-components.html(GA_SCRIPT, height=0)
+# Inietta il codice nel frontend
+st.markdown(GA_SCRIPT, unsafe_allow_html=True)
 
 
 
