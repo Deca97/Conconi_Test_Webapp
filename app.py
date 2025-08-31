@@ -18,6 +18,29 @@ from auth import (
     update_test_date,
 )
 
+import streamlit.components.v1 as components
+
+# Codice Google Analytics
+GA_ID = "G-04XMHP9LTK"  # <-- Sostituisci con il tuo ID
+GA_SCRIPT = f"""
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', '{GA_ID}');
+</script>
+"""
+
+# Inietto il codice nel frontend
+components.html(GA_SCRIPT, height=0)
+
+# Contenuto della tua app
+st.title("Conconi Test WebApp")
+st.write("Benvenuto nella tua app!")
+
+
 # ---- Config Streamlit ----
 st.set_page_config(page_title="Conconi Test App", layout="wide")
 st.title("🏃‍♂️ Conconi Test Analyzer")
