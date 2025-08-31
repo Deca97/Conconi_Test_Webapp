@@ -36,9 +36,6 @@ GA_SCRIPT = f"""
 # Inietto il codice nel frontend
 components.html(GA_SCRIPT, height=0)
 
-# Contenuto della tua app
-st.title("Conconi Test WebApp")
-st.write("Benvenuto nella tua app!")
 
 
 # ---- Config Streamlit ----
