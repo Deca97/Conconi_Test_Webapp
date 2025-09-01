@@ -75,7 +75,7 @@ def calculate_anaerobic_threshold(hr, sp, window=11, polyorder=3):
 
     # 4️⃣ Controllo correlazione preliminare
     corr = np.corrcoef(sp_smooth, hr_smooth)[0, 1]
-    if abs(corr) < 0.3:
+    if abs(corr) < 0.5:
         return None, None, None, None, None, "Scarsa correlazione tra HR e velocità, test non valido."
 
     # 5️⃣ Fit piecewise lineare (PWLF)
@@ -99,7 +99,7 @@ def calculate_anaerobic_threshold(hr, sp, window=11, polyorder=3):
 
     # 7️⃣ Controllo stabilità soglia
     if ci_low and ci_high:
-        if abs(ci_high - ci_low) / threshold_speed > 0.3:
+        if abs(ci_high - ci_low) / threshold_speed > 0.2:
             warning = "Intervallo di confidenza molto ampio, soglia poco stabile."
 
     return threshold_hr, threshold_speed, idx, ci_low, ci_high, warning
@@ -109,7 +109,7 @@ def calculate_anaerobic_threshold(hr, sp, window=11, polyorder=3):
 # ===============================
 #   BOOTSTRAP CI
 # ===============================
-def bootstrap_threshold(sp, hr_fit, residuals, n_bootstrap=20, alpha=0.05):
+def bootstrap_threshold(sp, hr_fit, residuals, n_bootstrap=50, alpha=0.05):
     thresholds = []
     sp = np.array(sp)
     for _ in range(n_bootstrap):
