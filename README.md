@@ -63,8 +63,12 @@ Il test deve essere eseguito in condizioni controllate per garantire risultati a
 
 - Il Test di Conconi fornisce **stime indicative**, non valori assoluti.  
 - I risultati possono variare in base al livello di allenamento, condizioni ambientali e qualità dei dati.  
-- Per una stima più precisa della soglia anaerobica, si consiglia di integrare misurazioni di **lattato** o **analisi del gas respiratorio**.
-I valori calcolati vanno interpretati **come indicazioni di allenamento** e non come diagnosi cliniche.
+- Per una stima più precisa della soglia anaerobica, si consiglia di integrare misurazioni di **lattato** o **analisi del gas respiratorio**.  
+- I valori calcolati vanno interpretati **come indicazioni di allenamento** e non come diagnosi cliniche.  
+- L’**Heart Rate Deflection Point (HRDP)** può essere utile **per monitorare i cambiamenti nel tempo nello stesso individuo**, più che come metodo assoluto per determinare la soglia anaerobica.  
+  - Le variazioni del HRDP tra test ripetuti possono indicare **miglioramenti o peggioramenti della forma fisica**.  
+  - Si consiglia di utilizzarlo **in confronto intra-soggetto** e in combinazione con altre metriche per avere un quadro più completo dello stato dell’atleta.  
+  - L’HRDP fornisce indicazioni soprattutto **di trend**, quindi non va interpretato come valore assoluto per allenamenti o test clinici.
 
 ---
 
@@ -77,6 +81,6 @@ I valori calcolati vanno interpretati **come indicazioni di allenamento** e non 
 ## 📚 Riferimenti Scientifici
 
 - Conconi F., et al., *Determination of the anaerobic threshold by a noninvasive field test in runners*, Journal of Applied Physiology, 1982.  
-- Ferri-Marini C, et al., *Assessment of the Heart Rate Deflection Point in Athletes for a Non-Invasive Determination of the Anaerobic Threshold: A Systematic Review*, Journal of Science in Sport and Exercise, 2025.
+- Ferri-Marini C, et al., *Assessment of the Heart Rate Deflection Point in Athletes for a Non-Invasive Determination of the Anaerobic Threshold: A Systematic Review*, Journal of Science in Sport and Exercise, 2025.  
 
 ---
