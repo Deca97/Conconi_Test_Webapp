@@ -157,8 +157,8 @@ def analyze_fit_file(file_buffer):
         return {"error": "File troppo corto o con dati insufficienti."}
 
     # Rimuovi valori iniziali/finali rumorosi
-    heart_rates = heart_rates[10:-10]
-    speeds = speeds[10:-10]
+    heart_rates = heart_rates[20:-10]
+    speeds = speeds[20:-10]
 
     hr_threshold, speed_threshold, idx, ci_low, ci_high, warning = calculate_anaerobic_threshold(heart_rates, speeds)
     if hr_threshold is None:
