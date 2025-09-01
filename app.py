@@ -34,10 +34,6 @@ st.markdown(
     """
     <div style="text-align:center; margin-bottom:30px;">
         <h1 style="color:#2E86C1; font-size:3em;">🏃‍♂️ Conconi Test Analyzer</h1>
-        <p style="font-size:1.2em; color:#555; max-width:700px; margin:auto;">
-            Analizza i tuoi test Conconi, monitora le soglie di frequenza cardiaca e il ritmo soglia, 
-            e tieni traccia dei progressi nel tempo. 
-        </p>
     </div>
     """,
     unsafe_allow_html=True
