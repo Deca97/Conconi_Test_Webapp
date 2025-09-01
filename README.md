@@ -10,7 +10,7 @@ Il **Test di Conconi**, ideato da Francesco Conconi nel 1982, è un test increme
 - La frequenza cardiaca viene monitorata ad ogni intervallo.  
 - Il punto in cui la curva frequenza cardiaca – velocità smette di essere lineare identifica la **soglia anaerobica**, utile per programmare allenamenti di endurance e interval training.
 
-> ⚠️ Nota: la stima della soglia tramite frequenza cardiaca è indicativa. Studi recenti mostrano che la relazione HR–velocità può variare molto tra individui, quindi i risultati devono essere interpretati con cautela.  
+> ⚠️ Nota: la stima della soglia tramite frequenza cardiaca è indicativa. Studi recenti mostrano che la relazione HR–velocità può variare molto tra individui, quindi i risultati devono essere interpretati con cautela.
 
 ---
 
@@ -64,11 +64,20 @@ Il test deve essere eseguito in condizioni controllate per garantire risultati a
 - Il Test di Conconi fornisce **stime indicative**, non valori assoluti.  
 - I risultati possono variare in base al livello di allenamento, condizioni ambientali e qualità dei dati.  
 - Per una stima più precisa della soglia anaerobica, si consiglia di integrare misurazioni di **lattato** o **analisi del gas respiratorio**.  
-- I valori calcolati vanno interpretati **come indicazioni di allenamento** e non come diagnosi cliniche.  
-- L’**Heart Rate Deflection Point (HRDP)** può essere utile **per monitorare i cambiamenti nel tempo nello stesso individuo**, più che come metodo assoluto per determinare la soglia anaerobica.  
-  - Le variazioni del HRDP tra test ripetuti possono indicare **miglioramenti o peggioramenti della forma fisica**.  
-  - Si consiglia di utilizzarlo **in confronto intra-soggetto** e in combinazione con altre metriche per avere un quadro più completo dello stato dell’atleta.  
-  - L’HRDP fornisce indicazioni soprattutto **di trend**, quindi non va interpretato come valore assoluto per allenamenti o test clinici.
+- I valori calcolati vanno interpretati **come indicazioni di allenamento**, non come diagnosi cliniche.  
+- L’**HR Deflection Point (HRDP)** o la curva di Conconi sono strumenti utili soprattutto per monitorare **trend individuali nel tempo**, piuttosto che determinare valori assoluti della soglia anaerobica.
+
+---
+
+## ℹ️ Utilità dell’App
+
+Il **Conconi Test Analyzer** è pensato per runner e atleti che vogliono monitorare i propri progressi in modo semplice e non invasivo:
+
+- **Monitoraggio individuale nel tempo**: confrontando più test dello stesso atleta, è possibile osservare miglioramenti o regressioni nella condizione aerobica.  
+- **Supporto alla pianificazione dell’allenamento**: fornisce indicazioni relative sull’intensità degli allenamenti e permette di strutturare sessioni progressive basate sulla soglia stimata.  
+- **Educazione e consapevolezza**: aiuta a comprendere come la frequenza cardiaca varia con la velocità e come interpretare i dati di allenamento.
+
+> ⚠️ Nota: i valori della soglia anaerobica calcolati dall’app sono **indicativi**. Non sostituiscono test di laboratorio basati su lattato o analisi del gas respiratorio.
 
 ---
 
@@ -81,6 +90,4 @@ Il test deve essere eseguito in condizioni controllate per garantire risultati a
 ## 📚 Riferimenti Scientifici
 
 - Conconi F., et al., *Determination of the anaerobic threshold by a noninvasive field test in runners*, Journal of Applied Physiology, 1982.  
-- Ferri-Marini C, et al., *Assessment of the Heart Rate Deflection Point in Athletes for a Non-Invasive Determination of the Anaerobic Threshold: A Systematic Review*, Journal of Science in Sport and Exercise, 2025.  
-
----
+- Ferri-Marini C., et al., *Assessment of the Heart Rate Deflection Point in Athletes for a Non-Invasive Determination of the Anaerobic Threshold: A Systematic Review*, Journal of Science in Sport and Exercise, 2025.
