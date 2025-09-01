@@ -4,11 +4,13 @@
 
 ## ⚡ Cos’è il Test di Conconi
 
-Il **Test di Conconi**, ideato da Francesco Conconi nel 1982, è un test incrementale utilizzato per stimare la **soglia anaerobica** di un atleta, basandosi sull’analisi della frequenza cardiaca rispetto alla velocità.  
+Il **Test di Conconi**, ideato da Francesco Conconi nel 1982, è un test incrementale utilizzato per stimare la **soglia anaerobica** di un atleta, basandosi sull’analisi della frequenza cardiaca rispetto alla velocità.
 
 - Durante il test, l’atleta corre con incrementi regolari di velocità.  
 - La frequenza cardiaca viene monitorata ad ogni intervallo.  
 - Il punto in cui la curva frequenza cardiaca – velocità smette di essere lineare identifica la **soglia anaerobica**, utile per programmare allenamenti di endurance e interval training.
+
+> ⚠️ Nota: la stima della soglia tramite frequenza cardiaca è indicativa. Studi recenti mostrano che la relazione HR–velocità può variare molto tra individui, quindi i risultati devono essere interpretati con cautela.  
 
 ---
 
@@ -16,12 +18,12 @@ Il **Test di Conconi**, ideato da Francesco Conconi nel 1982, è un test increme
 
 Il test deve essere eseguito in condizioni controllate per garantire risultati affidabili:
 
-1. **Riscaldamento**: 10-15 minuti a bassa intensità.  
-2. **Incrementi di velocità**: Correre 200 m a una velocità iniziale, aumentando la velocità di 0,5–1 km/h ogni 200 m successivi.  
-3. **Rilevazione frequenza cardiaca**: Misurare la frequenza cardiaca durante tutta la sessione.  
-4. **Identificazione della soglia**: La soglia anaerobica corrisponde al punto in cui la curva frequenza cardiaca – velocità smette di essere lineare.
+1. **Riscaldamento**: 10–15 minuti a bassa intensità.  
+2. **Incrementi di velocità**: correre 200 m a una velocità iniziale, aumentando di **0,5–1 km/h ogni 200 m** successivi.  
+3. **Rilevazione frequenza cardiaca**: monitorare continuamente la frequenza cardiaca.  
+4. **Identificazione della soglia**: la soglia anaerobica corrisponde al punto in cui la curva frequenza cardiaca – velocità smette di essere lineare.
 
-> Consigliato: test su superficie piana con cardiofrequenzimetro affidabile.
+> Consigliato: test su superficie piana, con cardiofrequenzimetro affidabile, preferibilmente all’aperto o su pista.
 
 ---
 
@@ -40,6 +42,8 @@ Il test deve essere eseguito in condizioni controllate per garantire risultati a
 | 200                  | 1800                   | 21           | 5.83        | 34.3             | 2:53          | 06:29                  |
 | 200                  | 2000                   | 22           | 6.11        | 32.7             | 2:45          | 07:02                  |
 
+> **Nota:** ogni incremento di 200 m serve a ottenere un aumento graduale della velocità e permettere di osservare il punto di deflessione della frequenza cardiaca.
+
 ---
 
 ## 🚀 Come usare l’app
@@ -51,23 +55,28 @@ Il test deve essere eseguito in condizioni controllate per garantire risultati a
    - Velocità corrispondente  
    - Intervallo di confidenza  
 
+> ⚠️ Attenzione: se il test non è stato eseguito correttamente o i dati sono insufficienti, l’app restituirà un errore.
+
 ---
 
 ## ⚠️ Avvertenze
 
 - Il Test di Conconi fornisce **stime indicative**, non valori assoluti.  
 - I risultati possono variare in base al livello di allenamento, condizioni ambientali e qualità dei dati.  
+- Per una stima più precisa della soglia anaerobica, si consiglia di integrare misurazioni di **lattato** o **analisi del gas respiratorio**.
+I valori calcolati vanno interpretati **come indicazioni di allenamento** e non come diagnosi cliniche.
 
 ---
 
-## 📂 File Supportati
+## 📂 File supportati
 
-- File **FIT** (da dispositivi Garmin o simili)  
+- File **FIT** (da dispositivi Garmin o simili).  
 
 ---
 
 ## 📚 Riferimenti Scientifici
 
 - Conconi F., et al., *Determination of the anaerobic threshold by a noninvasive field test in runners*, Journal of Applied Physiology, 1982.  
+- Ferri-Marini C, et al., *Assessment of the Heart Rate Deflection Point in Athletes for a Non-Invasive Determination of the Anaerobic Threshold: A Systematic Review*, Journal of Science in Sport and Exercise, 2025.
 
 ---
