@@ -1,0 +1,13 @@
+name: Keep Streamlit Alive
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # ogni 10 minuti
+  workflow_dispatch:          # permette avvio manuale
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curl Streamlit app
+        run: curl -s https://conconi-test.streamlit.app// > /dev/null
