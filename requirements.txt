@@ -6,3 +6,5 @@ supabase
 fitdecode
 numpy
 pwlf
+selenium
+webdriver-manager
