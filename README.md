@@ -1,33 +1,34 @@
+
 # 🏃‍♂️ Conconi Test Analyzer
 
 ---
 
-## ⚡ Cos’è il Test di Conconi
+## ⚡ What is the Conconi Test
 
-Il **Test di Conconi**, ideato da Francesco Conconi nel 1982, è un test incrementale utilizzato per stimare la **soglia anaerobica** di un atleta, basandosi sull’analisi della frequenza cardiaca rispetto alla velocità.
+The **Conconi Test**, developed by Francesco Conconi in 1982, is an incremental test used to estimate an athlete’s **anaerobic threshold**, based on the analysis of heart rate relative to running speed.
 
-- Durante il test, l’atleta corre con incrementi regolari di velocità.  
-- La frequenza cardiaca viene monitorata ad ogni intervallo.  
-- Il punto in cui la curva frequenza cardiaca – velocità smette di essere lineare identifica la **soglia anaerobica**, utile per programmare allenamenti di endurance e interval training.
+- During the test, the athlete runs with regular speed increments.  
+- Heart rate is monitored at each interval.  
+- The point where the heart rate–speed curve stops being linear identifies the **anaerobic threshold**, which is useful for planning endurance and interval training.
 
-> ⚠️ Nota: la stima della soglia tramite frequenza cardiaca è indicativa. Studi recenti mostrano che la relazione HR–velocità può variare molto tra individui, quindi i risultati devono essere interpretati con cautela.
-
----
-
-## 📊 Protocollo del Test di Conconi
-
-Il test deve essere eseguito in condizioni controllate per garantire risultati affidabili:
-
-1. **Riscaldamento**: 10–15 minuti a bassa intensità.  
-2. **Incrementi di velocità**: correre 200 m a una velocità iniziale, aumentando di **0,5–1 km/h ogni 200 m** successivi.  
-3. **Rilevazione frequenza cardiaca**: monitorare continuamente la frequenza cardiaca.  
-4. **Identificazione della soglia**: la soglia anaerobica corrisponde al punto in cui la curva frequenza cardiaca – velocità smette di essere lineare.
-
-> Consigliato: test su superficie piana, con cardiofrequenzimetro affidabile, preferibilmente all’aperto o su pista.
+> ⚠️ Note: Estimating the threshold from heart rate is indicative. Recent studies show that the HR–speed relationship can vary significantly between individuals, so results should be interpreted with caution.
 
 ---
 
-## 📈 Tabella di riferimento incrementi velocità
+## 📊 Conconi Test Protocol
+
+The test should be performed under controlled conditions to ensure reliable results:
+
+1. **Warm-up**: 10–15 minutes at low intensity.  
+2. **Speed increments**: run 200 m at an initial speed, then increase by **0.5–1 km/h every 200 m**.  
+3. **Heart rate monitoring**: monitor heart rate continuously.  
+4. **Threshold identification**: the anaerobic threshold corresponds to the point where the HR–speed curve stops being linear.
+
+> Recommended: perform the test on a flat surface, with a reliable heart rate monitor, preferably outdoors or on a track.
+
+---
+
+## 📈 Reference Table of Speed Increments
 
 | Interval Distance (m) | Cumulative Distance (m) | Speed (km/h) | Speed (m/s) | Time for 200 m (s) | Pace (min/km) | Cumulative Time (mm:ss) |
 |----------------------|------------------------|--------------|-------------|------------------|---------------|------------------------|
@@ -42,52 +43,53 @@ Il test deve essere eseguito in condizioni controllate per garantire risultati a
 | 200                  | 1800                   | 21           | 5.83        | 34.3             | 2:53          | 06:29                  |
 | 200                  | 2000                   | 22           | 6.11        | 32.7             | 2:45          | 07:02                  |
 
-> **Nota:** ogni incremento di 200 m serve a ottenere un aumento graduale della velocità e permettere di osservare il punto di deflessione della frequenza cardiaca.
+> **Note:** Each 200 m increment allows a gradual speed increase and helps observe the HR deflection point.
 
 ---
 
-## 🚀 Come usare l’app
+## 🚀 How to Use the App
 
-1. **Carica il file FIT** della tua sessione di corsa tramite il pulsante “Carica file FIT”.  
-2. L’app estrarrà automaticamente **frequenza cardiaca** e **velocità**.  
-3. Calcolerà la **soglia anaerobica** e mostrerà il risultato:  
-   - Frequenza cardiaca alla soglia  
-   - Velocità corrispondente  
-   - Intervallo di confidenza  
+1. **Upload the FIT file** of your running session via the “Upload FIT file” button.  
+2. The app will automatically extract **heart rate** and **speed**.  
+3. It will calculate the **anaerobic threshold** and display:  
+   - Heart rate at threshold  
+   - Corresponding speed  
+   - Confidence interval  
 
-> ⚠️ Attenzione: se il test non è stato eseguito correttamente o i dati sono insufficienti, l’app restituirà un errore.
-
----
-
-## ⚠️ Avvertenze
-
-- Il Test di Conconi fornisce **stime indicative**, non valori assoluti.  
-- I risultati possono variare in base al livello di allenamento, condizioni ambientali e qualità dei dati.  
-- Per una stima più precisa della soglia anaerobica, si consiglia di integrare misurazioni di **lattato** o **analisi del gas respiratorio**.  
-- I valori calcolati vanno interpretati **come indicazioni di allenamento**, non come diagnosi cliniche.  
-- L’**HR Deflection Point (HRDP)** o la curva di Conconi sono strumenti utili soprattutto per monitorare **trend individuali nel tempo**, piuttosto che determinare valori assoluti della soglia anaerobica.
+> ⚠️ Warning: If the test was not executed correctly or data are insufficient, the app will return an error.
 
 ---
 
-## ℹ️ Utilità dell’App
+## ⚠️ Warnings
 
-Il **Conconi Test Analyzer** è pensato per runner e atleti che vogliono monitorare i propri progressi in modo semplice e non invasivo:
-
-- **Monitoraggio individuale nel tempo**: confrontando più test dello stesso atleta, è possibile osservare miglioramenti o regressioni nella condizione aerobica.  
-- **Supporto alla pianificazione dell’allenamento**: fornisce indicazioni relative sull’intensità degli allenamenti e permette di strutturare sessioni progressive basate sulla soglia stimata.  
-- **Educazione e consapevolezza**: aiuta a comprendere come la frequenza cardiaca varia con la velocità e come interpretare i dati di allenamento.
-
-> ⚠️ Nota: i valori della soglia anaerobica calcolati dall’app sono **indicativi**. Non sostituiscono test di laboratorio basati su lattato o analisi del gas respiratorio.
+- The Conconi Test provides **indicative estimates**, not absolute values.  
+- Results may vary depending on training level, environmental conditions, and data quality.  
+- For a more precise determination of the anaerobic threshold, consider using **blood lactate measurements** or **respiratory gas analysis**.  
+- Calculated values should be interpreted **as training guidelines**, not as clinical diagnostics.  
+- The **HR Deflection Point (HRDP)** or Conconi curve is most useful for monitoring **individual trends over time**, rather than determining absolute threshold values.
 
 ---
 
-## 📂 File supportati
+## ℹ️ Usefulness of the App
 
-- File **FIT** (da dispositivi Garmin o simili).  
+The **Conconi Test Analyzer** is designed for runners and athletes who want to monitor progress in a simple, non-invasive way:
+
+- **Individual monitoring over time**: by comparing multiple tests from the same athlete, one can observe improvements or regressions in aerobic condition.  
+- **Support for training planning**: provides relative indications for training intensity and helps structure progressive sessions based on the estimated threshold.  
+- **Education and awareness**: helps understand how heart rate varies with speed and how to interpret training data.
+
+> ⚠️ Note: The threshold values calculated by the app are **indicative**. They do not replace lab-based tests with lactate or gas exchange analysis.
 
 ---
 
-## 📚 Riferimenti Scientifici
+## 📂 Supported Files
+
+- **FIT files** (from Garmin or similar devices).  
+
+---
+
+## 📚 Scientific References
 
 - Conconi F., et al., *Determination of the anaerobic threshold by a noninvasive field test in runners*, Journal of Applied Physiology, 1982.  
-- Ferri-Marini C., et al., *Assessment of the Heart Rate Deflection Point in Athletes for a Non-Invasive Determination of the Anaerobic Threshold: A Systematic Review*, Journal of Science in Sport and Exercise, 2025.
+- Donne, Bernard; Fleming, Neil; Campbell, Garry; Ward, Tomás; Crampton, David; Mahony, Nick. *Graded Incremental Test Data (Cycling, Running, Kayaking, Rowing): an open access dataset*. Zenodo, March 2022.
+- Ferri-Marini C., et al., *Assessment of the Heart Rate Deflection Point in Athletes for a Non-Invasive Determination of the Anaerobic Threshold: A Systematic Review*, Journal of Science in Sport and Exercise, 2025.  
