@@ -73,16 +73,16 @@ def calculate_anaerobic_threshold(hr, sp, window=11, polyorder=3):
     hr_smooth = smooth_data(hr_filtered, window=window, polyorder=polyorder)
     sp_smooth = smooth_data(sp_filtered, window=window, polyorder=polyorder)
 
-    # 4️⃣ Controllo correlazione preliminare
-    corr = np.corrcoef(sp_smooth, hr_smooth)[0, 1]
-    if abs(corr) < 0.5:
-        return None, None, None, None, None, "Scarsa correlazione tra HR e velocità, test non valido."
 
     # 5️⃣ Fit piecewise lineare (PWLF)
     try:
         pwlf_model = pwlf.PiecewiseLinFit(sp_smooth, hr_smooth)
         breaks = pwlf_model.fit(2)
         hr_fit = pwlf_model.predict(sp_smooth)
+        # 🔹 Controllo pendenza
+        slopes = pwlf_model.calc_slopes()
+        if len(slopes) >= 2 and slopes[1] > slopes[0] * 0.9:
+            return None, None, None, None, "Soglia non calcolabile: curva HR non decrescente dopo break"
     except Exception as e:
         return None, None, None, None, None, f"Errore nel fit PWLF: {e}"
 
