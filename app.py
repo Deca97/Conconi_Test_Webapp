@@ -381,7 +381,7 @@ if st.session_state.logged_in:
         # ===============================
   
         # ===============================
-        #   SIDEBAR: CHAT OPEN-SOURCE OTTIMIZZATA
+        #   SIDEBAR: CHAT OPEN-SOURCE LEGGERO
         # ===============================    
 
         from transformers import pipeline
@@ -390,12 +390,12 @@ if st.session_state.logged_in:
         if "chatbot" not in st.session_state:
             st.session_state.chatbot = pipeline(
                 "text-generation",
-                model="EleutherAI/gpt-neo-125M",  # modello leggero e gratuito
-                device=-1,  # usa CPU
-                max_new_tokens=200,  # meno token per stabilità
-                temperature=0.6,     # risposte più coerenti
+                model="distilgpt2",      # modello leggero
+                device=-1,               # usa CPU
+                max_new_tokens=150,      # risposte brevi e veloci
+                temperature=0.6,         # coerenza
                 do_sample=True,
-                top_p=0.9,           # campionamento controllato
+                top_p=0.9,
                 repetition_penalty=1.2
             )
 
@@ -416,32 +416,23 @@ if st.session_state.logged_in:
             with st.chat_message("user"):
                 st.markdown(prompt)
 
-            # Genera chiave unica per caching
             cache_key = f"{timestamp[:10]}_{prompt}"
 
             if cache_key in st.session_state.cached_answers:
                 answer = st.session_state.cached_answers[cache_key]
             else:
-                # Prompt ottimizzato per modello leggero
                 full_prompt = (
-                    "Sei un coach di corsa esperto. Rispondi in modo chiaro, pratico e conciso.\n"
-                    "Non ripetere i dati del test, fornisci solo consigli utili.\n"
-                    f"Test Conconi più recente:\n"
+                    "Sei un coach di corsa esperto. Rispondi in modo chiaro e pratico, senza ripetere i dati.\n"
+                    f"Dati test Conconi:\n"
                     f"- HR soglia: {hr_val_saved:.1f} bpm\n"
                     f"- Velocità soglia: {sp_val_saved:.2f} m/s\n"
                     f"- Ritmo soglia: {pace_val_saved}\n\n"
                     f"Domanda utente: {prompt}\n"
-                    "Risposta breve:"
+                    "Risposta breve e diretta:"
                 )
-
                 try:
                     output = st.session_state.chatbot(full_prompt)
-                    answer = output[0]["generated_text"]
-
-                    # Pulizia della risposta: rimuove eventuale ripetizione del prompt
-                    answer = answer.replace(full_prompt, "").strip()
-
-                    # Salva nel cache
+                    answer = output[0]["generated_text"].replace(full_prompt, "").strip()
                     st.session_state.cached_answers[cache_key] = answer
                 except Exception as e:
                     answer = f"⚠️ Errore generazione modello: {str(e)}"
@@ -449,4 +440,3 @@ if st.session_state.logged_in:
             st.session_state.messages.append({"role": "assistant", "content": answer})
             with st.chat_message("assistant"):
                 st.markdown(answer)
-
