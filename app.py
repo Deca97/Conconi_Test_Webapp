@@ -390,7 +390,7 @@ if st.session_state.logged_in:
         if "chatbot" not in st.session_state:
             st.session_state.chatbot = pipeline(
                 "text-generation",
-                model="facebook/opt-125m",      # modello leggero
+                model="bigscience/bloom-560m",      # modello leggero
                 device=-1,               # usa CPU
                 max_new_tokens=150,      # risposte brevi e veloci
                 temperature=0.6,         # coerenza
