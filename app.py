@@ -390,13 +390,13 @@ if st.session_state.logged_in:
         if "chatbot" not in st.session_state:
             st.session_state.chatbot = pipeline(
                 "text-generation",
-                model="tiny llama / TinyLlama",
+                model="mrm8488/bloom-560m-finetuned-unnatural-instructions",
                 device=-1,
-                max_new_tokens=150,
+                max_new_tokens=200,
                 temperature=0.6,
                 do_sample=True,
                 top_p=0.9,
-                repetition_penalty=1.2
+                repetition_penalty=1.5
             )
 
 
