@@ -387,7 +387,7 @@ if st.session_state.logged_in:
         if "chatbot" not in st.session_state:
             st.session_state.chatbot = pipeline(
                 "text-generation",
-                model="EleutherAI/gpt-neo-125M",  # modello leggero e gratuito
+                model="tiiuae/falcon-1b-instruct",  # modello leggero e gratuito
                 device=-1,  # usa CPU
                 max_new_tokens=300,
                 temperature=0.7,
