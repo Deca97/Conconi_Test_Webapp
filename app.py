@@ -385,17 +385,15 @@ if st.session_state.logged_in:
 
         # Inizializza il modello solo una volta
         if "chatbot" not in st.session_state:
-            try:
-                st.session_state.chatbot = pipeline(
-                    "text-generation",
-                    model="EleutherAI/gpt-neo-125M",  # modello leggero
-                    device=-1,  # forza CPU
-                    max_new_tokens=300
-                )
-            except Exception as e:
-                st.error(f"⚠️ Impossibile caricare il modello: {e}")
+            st.session_state.chatbot = pipeline(
+                "text-generation",
+                model="EleutherAI/gpt-neo-125M",  # modello leggero e gratuito
+                device=-1,  # usa CPU
+                max_new_tokens=300,
+                temperature=0.7,
+                do_sample=True
+            )
 
-        # Inizializza session state per messaggi e cache
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
@@ -419,23 +417,25 @@ if st.session_state.logged_in:
             if cache_key in st.session_state.cached_answers:
                 answer = st.session_state.cached_answers[cache_key]
             else:
-                # Contesto sul test
-                context = (
-                    f"Questo è il test Conconi più recente:\n"
-                    f"Data: {timestamp[:10]}\n"
-                    f"HR soglia: {hr_val_saved:.1f} bpm\n"
-                    f"Velocità soglia: {sp_val_saved:.2f} m/s\n"
-                    f"Ritmo soglia: {pace_val_saved}\n"
+                # Costruisci prompt ottimizzato
+                full_prompt = (
+                    "Sei un coach di corsa esperto. Rispondi in modo conciso e pratico.\n"
+                    f"Dati del test Conconi più recente:\n"
+                    f"- Data: {timestamp[:10]}\n"
+                    f"- HR soglia: {hr_val_saved:.1f} bpm\n"
+                    f"- Velocità soglia: {sp_val_saved:.2f} m/s\n"
+                    f"- Ritmo soglia: {pace_val_saved}\n\n"
+                    f"L'utente chiede: {prompt}\n"
+                    "Fornisci solo una risposta diretta, senza ripetere i dati."
                 )
 
                 try:
-                    full_prompt = (
-                        f"Sei un coach di corsa che spiega i risultati dei test Conconi.\n"
-                        f"{context}\nDomanda utente: {prompt}\nRisposta:"
-                    )
-
                     output = st.session_state.chatbot(full_prompt)
-                    answer = output[0]["generated_text"].replace(full_prompt, "").strip()
+                    answer = output[0]["generated_text"]
+
+                    # Rimuovi eventuali ripetizioni del prompt
+                    if full_prompt in answer:
+                        answer = answer.replace(full_prompt, "").strip()
 
                     # Salva nel cache
                     st.session_state.cached_answers[cache_key] = answer
