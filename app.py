@@ -384,22 +384,26 @@ if st.session_state.logged_in:
         #   SIDEBAR: CHAT OPEN-SOURCE LEGGERO (POP-UP)
         # ===============================    
 
+        import os
         from transformers import pipeline
+
+        # Carica README.md come contesto
+        readme_path = os.path.join(os.path.dirname(__file__), "README.md")
+        with open(readme_path, "r", encoding="utf-8") as f:
+            app_description = f.read()
 
         # Inizializza il modello solo una volta
         if "chatbot" not in st.session_state:
             st.session_state.chatbot = pipeline(
                 "text-generation",
-                model="distilgpt2",          # molto leggero, 82M parametri
-                device=-1,                       # usa CPU
-                max_new_tokens=120,              # risposte corte e veloci
-                temperature=0.7,                 # un po’ più creativo ma coerente
+                model="EleutherAI/gpt-neo-125M",          # modello molto leggero (82M)
+                device=-1,                   # usa CPU
+                max_new_tokens=120,          # risposte corte e veloci
+                temperature=0.7,             # un po’ creativo ma coerente
                 do_sample=True,
                 top_p=0.9,
-                repetition_penalty=1.1           # evita ripetizioni
+                repetition_penalty=1.1       # evita ripetizioni
             )
-
-
 
         if "messages" not in st.session_state:
             st.session_state.messages = []
@@ -418,7 +422,7 @@ if st.session_state.logged_in:
                     st.markdown(msg["content"])
 
             # Input utente
-            if prompt := st.chat_input("Fai una domanda sui tuoi test o allenamenti..."):
+            if prompt := st.chat_input("Fai una domanda su come usare l'app..."):
                 st.session_state.messages.append({"role": "user", "content": prompt})
                 with st.chat_message("user"):
                     st.markdown(prompt)
@@ -428,16 +432,13 @@ if st.session_state.logged_in:
                 if cache_key in st.session_state.cached_answers:
                     answer = st.session_state.cached_answers[cache_key]
                 else:
-                    # Prompt ottimizzato per modelli leggeri
+                    # Prompt ottimizzato: usa README come base di conoscenza
                     full_prompt = (
-                        "You are an expert running coach. Provide concise, actionable advice based on test data. "
-                        "Do NOT repeat the test numbers, just interpret them.\n\n"
-                        f"Latest Conconi test data:\n"
-                        f"- Threshold HR: {hr_val_saved:.1f} bpm\n"
-                        f"- Threshold speed: {sp_val_saved:.2f} m/s\n"
-                        f"- Threshold pace: {pace_val_saved}\n\n"
+                        "You are a support assistant for a running analysis app.\n"
+                        "Base your answers only on the following documentation:\n\n"
+                        f"{app_description}\n\n"
                         f"User question: {prompt}\n"
-                        "Answer in one or two short sentences, clear and practical."
+                        "Answer in simple, clear terms, with 1-2 short sentences."
                     )
 
                     try:
@@ -450,4 +451,5 @@ if st.session_state.logged_in:
                 st.session_state.messages.append({"role": "assistant", "content": answer})
                 with st.chat_message("assistant"):
                     st.markdown(answer)
+
 
