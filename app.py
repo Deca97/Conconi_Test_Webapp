@@ -390,14 +390,15 @@ if st.session_state.logged_in:
         if "chatbot" not in st.session_state:
             st.session_state.chatbot = pipeline(
                 "text-generation",
-                model="bigscience/bloom-560m",      # modello leggero, più potente di 125M
-                device=-1,                           # usa CPU
-                max_new_tokens=150,                  # risposte brevi e veloci
-                temperature=0.6,                     # coerenza nelle risposte
+                model="mrm8488/bloom-560m-finetuned-unnatural-instructions",
+                device=-1,
+                max_new_tokens=150,
+                temperature=0.6,
                 do_sample=True,
                 top_p=0.9,
                 repetition_penalty=1.2
             )
+
 
         if "messages" not in st.session_state:
             st.session_state.messages = []
@@ -428,15 +429,14 @@ if st.session_state.logged_in:
                 else:
                     # Prompt ottimizzato per modelli leggeri
                     full_prompt = (
-                        "You are an expert running coach. "
-                        "Provide concise, actionable advice directly addressing the user's question. "
-                        "Do not repeat the test numbers, just interpret them.\n\n"
+                        "You are an expert running coach. Provide concise, actionable advice based on test data. "
+                        "Do NOT repeat the test numbers, just interpret them.\n\n"
                         f"Latest Conconi test data:\n"
                         f"- Threshold HR: {hr_val_saved:.1f} bpm\n"
                         f"- Threshold speed: {sp_val_saved:.2f} m/s\n"
                         f"- Threshold pace: {pace_val_saved}\n\n"
                         f"User question: {prompt}\n"
-                        "Answer in 1-2 short sentences, clear and practical."
+                        "Answer in one or two short sentences, clear and practical."
                     )
 
                     try:
