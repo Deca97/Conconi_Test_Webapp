@@ -381,7 +381,7 @@ if st.session_state.logged_in:
         # ===============================
   
         # ===============================
-        #   SIDEBAR: CHAT OPEN-SOURCE LEGGERO
+        #   SIDEBAR: CHAT OPEN-SOURCE LEGGERO (POP-UP)
         # ===============================    
 
         from transformers import pipeline
@@ -390,10 +390,10 @@ if st.session_state.logged_in:
         if "chatbot" not in st.session_state:
             st.session_state.chatbot = pipeline(
                 "text-generation",
-                model="bigscience/bloom-560m",      # modello leggero
-                device=-1,               # usa CPU
-                max_new_tokens=150,      # risposte brevi e veloci
-                temperature=0.6,         # coerenza
+                model="bigscience/bloom-560m",      # modello leggero, più potente di 125M
+                device=-1,                           # usa CPU
+                max_new_tokens=150,                  # risposte brevi e veloci
+                temperature=0.6,                     # coerenza nelle risposte
                 do_sample=True,
                 top_p=0.9,
                 repetition_penalty=1.2
@@ -405,40 +405,48 @@ if st.session_state.logged_in:
         if "cached_answers" not in st.session_state:
             st.session_state.cached_answers = {}
 
-        # Mostra chat salvata
-        for msg in st.session_state.messages:
-            with st.chat_message(msg["role"]):
-                st.markdown(msg["content"])
+        # ===============================
+        # Chat in Pop-up separato
+        # ===============================
+        with st.expander("💬 Chat con Coach AI (apri/chiudi)", expanded=False):
+            
+            # Mostra chat salvata
+            for msg in st.session_state.messages:
+                with st.chat_message(msg["role"]):
+                    st.markdown(msg["content"])
 
-        # Input utente
-        if prompt := st.chat_input("Fai una domanda sui tuoi test o allenamenti..."):
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            with st.chat_message("user"):
-                st.markdown(prompt)
+            # Input utente
+            if prompt := st.chat_input("Fai una domanda sui tuoi test o allenamenti..."):
+                st.session_state.messages.append({"role": "user", "content": prompt})
+                with st.chat_message("user"):
+                    st.markdown(prompt)
 
-            cache_key = f"{timestamp[:10]}_{prompt}"
+                # Cache per evitare rigenerazioni
+                cache_key = f"{timestamp[:10]}_{prompt}"
+                if cache_key in st.session_state.cached_answers:
+                    answer = st.session_state.cached_answers[cache_key]
+                else:
+                    # Prompt ottimizzato per modelli leggeri
+                    full_prompt = (
+                        "You are an expert running coach. "
+                        "Provide concise, actionable advice directly addressing the user's question. "
+                        "Do not repeat the test numbers, just interpret them.\n\n"
+                        f"Latest Conconi test data:\n"
+                        f"- Threshold HR: {hr_val_saved:.1f} bpm\n"
+                        f"- Threshold speed: {sp_val_saved:.2f} m/s\n"
+                        f"- Threshold pace: {pace_val_saved}\n\n"
+                        f"User question: {prompt}\n"
+                        "Answer in 1-2 short sentences, clear and practical."
+                    )
 
-            if cache_key in st.session_state.cached_answers:
-                answer = st.session_state.cached_answers[cache_key]
-            else:
-                full_prompt = (
-                    "You are an expert running coach. Provide concise, practical advice based on test data. "
-                    "Do NOT repeat the raw numbers.\n\n"
-                    f"Conconi test data:\n"
-                    f"- Threshold HR: {hr_val_saved:.1f} bpm\n"
-                    f"- Threshold speed: {sp_val_saved:.2f} m/s\n"
-                    f"- Threshold pace: {pace_val_saved}\n\n"
-                    f"User question: {prompt}\n"
-                    "Answer in one or two short sentences, directly addressing the question."
-                )
+                    try:
+                        output = st.session_state.chatbot(full_prompt)
+                        answer = output[0]["generated_text"].replace(full_prompt, "").strip()
+                        st.session_state.cached_answers[cache_key] = answer
+                    except Exception as e:
+                        answer = f"⚠️ Model generation error: {str(e)}"
 
-                try:
-                    output = st.session_state.chatbot(full_prompt)
-                    answer = output[0]["generated_text"].replace(full_prompt, "").strip()
-                    st.session_state.cached_answers[cache_key] = answer
-                except Exception as e:
-                    answer = f"⚠️ Errore generazione modello: {str(e)}"
+                st.session_state.messages.append({"role": "assistant", "content": answer})
+                with st.chat_message("assistant"):
+                    st.markdown(answer)
 
-            st.session_state.messages.append({"role": "assistant", "content": answer})
-            with st.chat_message("assistant"):
-                st.markdown(answer)
