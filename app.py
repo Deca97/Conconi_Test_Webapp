@@ -390,7 +390,7 @@ if st.session_state.logged_in:
         if "chatbot" not in st.session_state:
             st.session_state.chatbot = pipeline(
                 "text-generation",
-                model="bigscience/bloom-350m",   # modello più leggero ma efficace
+                model="distilgpt2",          # molto leggero, 82M parametri
                 device=-1,                       # usa CPU
                 max_new_tokens=120,              # risposte corte e veloci
                 temperature=0.7,                 # un po’ più creativo ma coerente
