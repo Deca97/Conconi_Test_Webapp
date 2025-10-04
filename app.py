@@ -7,6 +7,8 @@ import json
 import numpy as np
 from pathlib import Path
 import os
+from transformers import pipeline
+
 
 from utils import analyze_fit_file, speed_to_pace
 from auth import (
@@ -375,16 +377,26 @@ if st.session_state.logged_in:
         else:
             st.info("Nessun test disponibile. Carica un file FIT per iniziare.")
 
-
         # ===============================
-        #   SIDEBAR: CHAT
+        #   SIDEBAR: CHAT OPEN-SOURCE
         # ===============================    
 
-        from openai import OpenAI
-        client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+        # Inizializza il modello solo una volta
+        if "chatbot" not in st.session_state:
+            st.session_state.chatbot = pipeline(
+                "text-generation",
+                model="tiiuae/falcon-7b-instruct",  # modello gratuito open-source
+                device_map="auto",                  # usa GPU se disponibile
+                torch_dtype="auto",
+                max_new_tokens=300
+            )
 
         if "messages" not in st.session_state:
             st.session_state.messages = []
+
+        if "cached_answers" not in st.session_state:
+            st.session_state.cached_answers = {}
 
         # Mostra chat salvata
         for msg in st.session_state.messages:
@@ -397,29 +409,32 @@ if st.session_state.logged_in:
             with st.chat_message("user"):
                 st.markdown(prompt)
 
-            # Contesto sul test
-            context = f"""
-            Questo è il test Conconi più recente:
-            Data: {timestamp[:10]}
-            HR soglia: {hr_val_saved:.1f} bpm
-            Velocità soglia: {sp_val_saved:.2f} m/s
-            Ritmo soglia: {pace_val_saved}
-            """
+            # Genera chiave unica per caching
+            cache_key = f"{timestamp[:10]}_{prompt}"
 
-            response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": "Sei un coach di corsa che spiega i risultati dei test Conconi."},
-                    {"role": "system", "content": context},
-                    *st.session_state.messages,
-                ],
-                max_tokens=600,
-            )
+            if cache_key in st.session_state.cached_answers:
+                answer = st.session_state.cached_answers[cache_key]
+            else:
+                # Contesto sul test
+                context = f"""
+                Questo è il test Conconi più recente:
+                Data: {timestamp[:10]}
+                HR soglia: {hr_val_saved:.1f} bpm
+                Velocità soglia: {sp_val_saved:.2f} m/s
+                Ritmo soglia: {pace_val_saved}
+                """
 
-            answer = response.choices[0].message.content
+                try:
+                    full_prompt = f"Sei un coach di corsa che spiega i risultati dei test Conconi.\n{context}\nDomanda utente: {prompt}\nRisposta:"
+                    
+                    output = st.session_state.chatbot(full_prompt)
+                    answer = output[0]['generated_text']
+
+                    # Salva nel cache
+                    st.session_state.cached_answers[cache_key] = answer
+                except Exception as e:
+                    answer = f"⚠️ Errore generazione modello: {str(e)}"
+
             st.session_state.messages.append({"role": "assistant", "content": answer})
-
             with st.chat_message("assistant"):
                 st.markdown(answer)
-
-

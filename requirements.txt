@@ -8,4 +8,4 @@ numpy
 pwlf
 selenium
 webdriver-manager
-openai
+transformers
