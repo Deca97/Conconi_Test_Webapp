@@ -386,9 +386,8 @@ if st.session_state.logged_in:
         if "chatbot" not in st.session_state:
             st.session_state.chatbot = pipeline(
                 "text-generation",
-                model="tiiuae/falcon-7b-instruct",  # modello gratuito open-source
-                device_map="auto",                  # usa GPU se disponibile
-                torch_dtype="auto",
+                model="tiiuae/falcon-1b-instruct",
+                device=-1,  # usa CPU
                 max_new_tokens=300
             )
 

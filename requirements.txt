@@ -9,3 +9,5 @@ pwlf
 selenium
 webdriver-manager
 transformers
+torch
+accelerate
