@@ -18,6 +18,9 @@ from auth import (
     update_test_date,
     delete_account               
 )
+
+
+
 # ===============================
 #   CONFIGURAZIONE STREAMLIT
 # ===============================
@@ -371,4 +374,52 @@ if st.session_state.logged_in:
                 st.warning("Nessun dato dettagliato disponibile.")
         else:
             st.info("Nessun test disponibile. Carica un file FIT per iniziare.")
+
+
+        # ===============================
+        #   SIDEBAR: CHAT
+        # ===============================    
+
+        from openai import OpenAI
+        client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+        if "messages" not in st.session_state:
+            st.session_state.messages = []
+
+        # Mostra chat salvata
+        for msg in st.session_state.messages:
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["content"])
+
+        # Input utente
+        if prompt := st.chat_input("Fai una domanda sui tuoi test o allenamenti..."):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+
+            # Contesto sul test
+            context = f"""
+            Questo è il test Conconi più recente:
+            Data: {timestamp[:10]}
+            HR soglia: {hr_val_saved:.1f} bpm
+            Velocità soglia: {sp_val_saved:.2f} m/s
+            Ritmo soglia: {pace_val_saved}
+            """
+
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": "Sei un coach di corsa che spiega i risultati dei test Conconi."},
+                    {"role": "system", "content": context},
+                    *st.session_state.messages,
+                ],
+                max_tokens=600,
+            )
+
+            answer = response.choices[0].message.content
+            st.session_state.messages.append({"role": "assistant", "content": answer})
+
+            with st.chat_message("assistant"):
+                st.markdown(answer)
+
 
