@@ -390,7 +390,7 @@ if st.session_state.logged_in:
         if "chatbot" not in st.session_state:
             st.session_state.chatbot = pipeline(
                 "text-generation",
-                model="EleutherAI/gpt-neo-125M",      # modello leggero
+                model="bigscience/bloom-560m",      # modello leggero
                 device=-1,               # usa CPU
                 max_new_tokens=150,      # risposte brevi e veloci
                 temperature=0.6,         # coerenza
@@ -422,14 +422,16 @@ if st.session_state.logged_in:
                 answer = st.session_state.cached_answers[cache_key]
             else:
                 full_prompt = (
-                    "Sei un coach di corsa esperto. Rispondi in modo chiaro e pratico, senza ripetere i dati.\n"
-                    f"Dati test Conconi:\n"
-                    f"- HR soglia: {hr_val_saved:.1f} bpm\n"
-                    f"- Velocità soglia: {sp_val_saved:.2f} m/s\n"
-                    f"- Ritmo soglia: {pace_val_saved}\n\n"
-                    f"Domanda utente: {prompt}\n"
-                    "Risposta breve e diretta:"
+                    "You are an expert running coach. Provide concise, practical advice based on test data. "
+                    "Do NOT repeat the raw numbers.\n\n"
+                    f"Conconi test data:\n"
+                    f"- Threshold HR: {hr_val_saved:.1f} bpm\n"
+                    f"- Threshold speed: {sp_val_saved:.2f} m/s\n"
+                    f"- Threshold pace: {pace_val_saved}\n\n"
+                    f"User question: {prompt}\n"
+                    "Answer in one or two short sentences, directly addressing the question."
                 )
+
                 try:
                     output = st.session_state.chatbot(full_prompt)
                     answer = output[0]["generated_text"].replace(full_prompt, "").strip()
