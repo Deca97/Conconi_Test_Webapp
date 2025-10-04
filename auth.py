@@ -5,11 +5,14 @@ import re
 from datetime import datetime
 from secrets import token_urlsafe
 import smtplib
+import streamlit as st
+
 
 
 # Configurazione Supabase
-SUPABASE_URL = "https://gzvjntyijmvtrvntfxqv.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6dmpudHlpam12dHJ2bnRmeHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0MjM0MDUsImV4cCI6MjA3MTk5OTQwNX0.kDXNnBoDdJAh4Zlikp5oxi8JTv_kOTtaKbQs09_W6fw"
+SUPABASE_URL = st.secrets["SUPABASE_URL"]
+SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # ===============================

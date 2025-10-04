@@ -390,14 +390,15 @@ if st.session_state.logged_in:
         if "chatbot" not in st.session_state:
             st.session_state.chatbot = pipeline(
                 "text-generation",
-                model="mrm8488/bloom-560m-finetuned-unnatural-instructions",
-                device=-1,
-                max_new_tokens=150,
-                temperature=0.6,
+                model="bigscience/bloom-350m",   # modello più leggero ma efficace
+                device=-1,                       # usa CPU
+                max_new_tokens=120,              # risposte corte e veloci
+                temperature=0.7,                 # un po’ più creativo ma coerente
                 do_sample=True,
                 top_p=0.9,
-                repetition_penalty=1.2
+                repetition_penalty=1.1           # evita ripetizioni
             )
+
 
 
         if "messages" not in st.session_state:
